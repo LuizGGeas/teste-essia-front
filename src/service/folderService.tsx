@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { FolderElements } from "../mainScreen/component";
 
 const url = 'http://localhost:8080'
@@ -8,44 +8,37 @@ export function getFolderList() {
         return axios.get<FolderElements[]>(`${url}/folder`);
     } catch(e){
         console.error(e.error)
-    }
-    // return getMockData();
+    } 
 }
 
-function getMockData(): FolderElements[] {
-    return [
-        {
-            id: 1,
-            name: 'a',
-            parentFolder: null,
-            subFolderList: [
-                {
-                    id: 2,
-                    name: 'b',
-                    parentFolder: {
-                        id: 1,
-                        name: 'a',
-                    },
-                    subFolderList: [
-                        {
-                            id: 4,
-                            name: 'd',
-                            parentFolder: {
-                                id: 2,
-                                name: 'b',
-                            }
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    name: 'c',
-                    parentFolder: {
-                        id: 1,
-                        name: 'a',
-                    }
-                }
-            ]
-        }
-    ]
+export function getRootFolder() {
+    try {
+        return axios.get<FolderElements[]>(`${url}/folder/root`);
+    } catch(e){
+        console.error(e.error)
+    } 
+}
+
+export function updateFolder(folder: FolderElements) {
+    try {
+        return axios.put(`${url}/folder/${folder.id}`, folder);
+    } catch(e){
+        console.error(e.error)
+    }
+}
+
+export function saveFolder(folder: FolderElements) {
+    try {
+        return axios.post(`${url}/folder`, folder);
+    } catch(e){
+        console.error(e.error)
+    }
+}
+
+export function deleteFolder(folder: FolderElements) {
+    try {
+        return axios.delete(`${url}/folder/${folder.id}`);
+    } catch(e){
+        console.error(e.error)
+    }
 }
