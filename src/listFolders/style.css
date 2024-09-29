@@ -1,0 +1,12 @@
+.selected-file {
+    background-color: #f0f8ff;
+}
+
+.selected {
+    background-color: #d3d3d3;
+    font-weight: bold;
+}
+
+.no-bullet {
+    list-style-type: none;
+}

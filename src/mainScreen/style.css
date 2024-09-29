@@ -1,0 +1,78 @@
+.row {
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    height: 70vh;
+}
+
+.no-bullet {
+    list-style-type: none;
+}
+
+.menu-button button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer; 
+    background-color: #6EB974;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+button {
+    margin-left: 1rem;
+}
+
+button:first-child {
+    margin-left: 0;
+}
+
+.menu-button button:last-child {
+    margin-left: auto;
+}
+
+.menu-button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+}
+
+.menu-button button:hover {
+    background-color: #6EB974;
+}
+
+.column {
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.column:first-child {
+    background-color: #f8f8f8; 
+    border-right: 1px solid #ddd;
+}
+
+textarea {
+    width: 90%;
+    height: 90%; 
+    resize: vertical; 
+    font-family: Arial, sans-serif;
+    font-size: large;
+    padding: 10px; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
+
+.align-left {
+    -ms-flex-align: end;
+    align-items: end;
+    align-self: flex-end;
+    align-content: end;
+}
