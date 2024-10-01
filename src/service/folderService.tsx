@@ -21,7 +21,7 @@ export function getRootFolder() {
 
 export function updateFolder(folder: FolderElements) {
     try {
-        return axios.put(`${url}/folder/${folder.id}`, folder);
+        return axios.put(`${url}/folder/id/${folder.id}`, folder);
     } catch(e){
         console.error(e.error)
     }
@@ -37,7 +37,7 @@ export function saveFolder(folder: FolderElements) {
 
 export function deleteFolder(folder: FolderElements) {
     try {
-        return axios.delete(`${url}/folder/${folder.id}`);
+        return axios.delete(`${url}/folder/id/${folder.id}`);
     } catch(e){
         console.error(e.error)
     }

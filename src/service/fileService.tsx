@@ -5,7 +5,7 @@ const url = 'http://localhost:8080'
 
 export function updateFile(file: FileElements) {
     try {
-        return axios.put(`${url}/file/${file.id}`, file);
+        return axios.put(`${url}/file/id/${file.id}`, file);
     } catch(e){
         console.error(e.error)
     }
@@ -21,7 +21,7 @@ export function saveFile(file: FileElements) {
 
 export function deleteFile(file: FileElements) {
     try {
-        return axios.delete(`${url}/file/${file.id}`);
+        return axios.delete(`${url}/file/id/${file.id}`);
     } catch(e){
         console.error(e.error)
     }
