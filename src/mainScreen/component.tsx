@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import { getFolderList, getRootFolder, saveFolder } from "../service/folderService.tsx";
-import { saveFile, updateFile } from "../service/fileService.tsx";
+import React, { useEffect, useState } from "react";
+import { getRootFolder, saveFolder, deleteFolder } from "../service/folderService.tsx";
+import { saveFile, updateFile, deleteFile } from "../service/fileService.tsx";
 import ListFolders from "../listFolders/component.tsx";
+import Modal from "../modal/component.tsx"
 import './style.css'
 
 export interface FileElements {
     id?: number;
     name?: string;
-    sourceFolder?: FolderElements;
-    content?: string;
+    sourceFolder?: FolderElements | null;
+    fileContent?: string;
 }
 
 export interface FolderElements {
@@ -29,6 +30,7 @@ export default function MainScreen() {
     const [newFileName, setNewFileName] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [isModalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         initiateFolderList();
@@ -66,7 +68,7 @@ export default function MainScreen() {
     };
 
     const handleFileContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setSelectedFile({ ...selectedFile, content: e.target.value });
+        setSelectedFile({ ...selectedFile, fileContent: e.target.value });
     };
 
     const handleFolderSubmit = async (e: React.FormEvent) => {
@@ -105,20 +107,25 @@ export default function MainScreen() {
         e.preventDefault();
         setError('');
         setLoading(true);
+
+        if (!selectedFile)
+            return;
+
         try {
-            await updateFile(selectedFile);
+            setSelectedFile(null);
+            await updateFile({ ...selectedFile, sourceFolder: selectedFolder });
         } catch (error) {
             setError(error.message);
             console.error("Falha ao criar nova pasta", error);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     const handleFileSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        if (!newFolderName.trim()) {
+        if (!newFileName.trim()) {
             setError('Nome inválido')
             return;
         }
@@ -142,16 +149,38 @@ export default function MainScreen() {
         }
     };
 
+    const openDeleteModal = () => {
+        setModalOpen(true);
+    };
+
+    const deleteItemSelected = async () => {
+        setLoading(true);
+
+        if(!selectedFolder)
+            return;
+
+        try {
+            if(selectedFile) {
+                return await deleteFile(selectedFile);
+            }
+            return await deleteFolder(selectedFolder);
+        } catch (error) {
+            setError(error.message || "Unknown error");
+            console.error("Failed to create file", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <>
             <div className="menu-button">
                 {error && <p className="error-message">{error}</p>}
                 {loading && <p>Loading...</p>}
-            </div>
-            <div className="menu-button">
-                {!createNewFolder && <button onClick={() => setCreateNewFolder(!createNewFolder)}>Criar nova pasta</button>}
-                {createNewFolder &&
-                    <>
+
+                <div className="button-group">
+                    {!createNewFolder && <button onClick={() => setCreateNewFolder(!createNewFolder)}>Criar nova pasta</button>}
+                    {createNewFolder && (
                         <form onSubmit={handleFolderSubmit}>
                             <input
                                 type="text"
@@ -161,22 +190,29 @@ export default function MainScreen() {
                             />
                             <button type="submit">Criar nova pasta</button>
                         </form>
-                    </>
-                }
-                {!createNewFile && <button onClick={() => setCreateNewFile(!createNewFile)}>Criar novo arquivo</button>}
-                {createNewFile && (
-                    <form onSubmit={handleFileSubmit}>
-                        <input
-                            type="text"
-                            value={newFileName}
-                            onChange={handleFileNameChange}
-                            placeholder="Digite o nome do novo arquivo"
-                        />
-                        <button type="submit">Criar novo arquivo</button>
-                    </form>
-                )}
-                <button onClick={() => console.log('teste')}>Deletar item selecionado</button>
-                { selectedFile && <button className="align-left" onClick={updateFileContent}>Salvar arquivo</button> }
+                    )}
+                    {!createNewFile && <button onClick={() => setCreateNewFile(!createNewFile)}>Criar novo arquivo</button>}
+                    {createNewFile && (
+                        <form onSubmit={handleFileSubmit}>
+                            <input
+                                type="text"
+                                value={newFileName}
+                                onChange={handleFileNameChange}
+                                placeholder="Digite o nome do novo arquivo"
+                            />
+                            <button type="submit">Criar novo arquivo</button>
+                        </form>
+                    )}
+                    <button onClick={openDeleteModal}>Deletar item selecionado</button>
+                </div>
+
+                {selectedFile && <button className="update-button" onClick={updateFileContent}>Salvar arquivo</button>}
+                <Modal
+                    isOpen={isModalOpen}
+                    message="Are you sure you want to delete this item?"
+                    onClose={() => setModalOpen(false)}
+                    onConfirm={deleteItemSelected}
+                />
             </div>
             <div className="row">
                 <div className="column">
@@ -194,7 +230,7 @@ export default function MainScreen() {
                 </div>
                 <div className="column">
                     {selectedFile ? (
-                        <textarea value={selectedFile.content} onChange={handleFileContentChange} className="small-textarea" />
+                        <textarea value={selectedFile.fileContent} onChange={handleFileContentChange} className="small-textarea" />
                     ) : (
                         <p>No file selected</p>
                     )}

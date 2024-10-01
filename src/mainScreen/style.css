@@ -16,6 +16,7 @@
     color: white;
     border: none;
     border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
 button {
@@ -24,10 +25,6 @@ button {
 
 button:first-child {
     margin-left: 0;
-}
-
-.menu-button button:last-child {
-    margin-left: auto;
 }
 
 .menu-button {
@@ -40,7 +37,7 @@ button:first-child {
 }
 
 .menu-button button:hover {
-    background-color: #6EB974;
+    background-color: #4d9b5b;
 }
 
 .column {
@@ -54,8 +51,8 @@ button:first-child {
 }
 
 textarea {
-    width: 90%;
-    height: 90%; 
+    width: 100%;
+    min-height: 200px;
     resize: vertical; 
     font-family: Arial, sans-serif;
     font-size: large;
@@ -68,6 +65,10 @@ textarea {
 .error-message {
     color: red;
     font-weight: bold;
+    padding: 10px;
+    background-color: #ffdddd;
+    border: 1px solid red;
+    border-radius: 4px;
 }
 
 .align-left {
@@ -75,4 +76,31 @@ textarea {
     align-items: end;
     align-self: flex-end;
     align-content: end;
+}
+
+.menu-button {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px; 
+    flex: 1; 
+    justify-content: flex-start;
+}
+
+.update-button {
+    margin-left: auto; 
+}
+
+@media (max-width: 768px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
 }
